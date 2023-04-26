@@ -1581,7 +1581,10 @@ def generate_global_constants(api, output_dir):
         if enum_def["name"].startswith("Variant."):
             continue
 
-        header.append(f'\tenum {enum_def["name"]} {{')
+        if enum_def["name"] == "Key111":
+            header.append(f'\tenum class {enum_def["name"]} {{')
+        else:
+            header.append(f'\tenum {enum_def["name"]} {{')
         for value in enum_def["values"]:
             header.append(f'\t\t{value["name"]} = {value["value"]},')
         header.append("\t};")

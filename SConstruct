@@ -234,6 +234,7 @@ add_sources(sources, "src", "cpp")
 add_sources(sources, "src/classes", "cpp")
 add_sources(sources, "src/core", "cpp")
 add_sources(sources, "src/variant", "cpp")
+add_sources(sources, "dasGodot/src", "cpp")
 sources.extend([f for f in bindings if str(f).endswith(".cpp")])
 
 suffix = ".{}.{}".format(env["platform"], env["target"])
@@ -251,6 +252,15 @@ env["suffix"] = suffix
 library = None
 env["OBJSUFFIX"] = suffix + env["OBJSUFFIX"]
 library_name = "libgodot-cpp{}{}".format(suffix, env["LIBSUFFIX"])
+
+env.Append( CPPPATH=['#../gstgamescript/include', "#../gstgamescript/cpplib", "#../gstgamescript/cpplib/include", '#../daScript/include', '#../daScript/src', '#../flecs/include', '#../flecs/src', '#../flatbuffers/include'] )
+env.Append(CPPDEFINES=["FLECS_NO_CPP", "WITH_FLECS"])
+
+env.Append(
+    LIBS = ['libGameScriptAll', 'curl'],
+    LIBPATH = ['#../gstgamescript/lib/', '#../gstgamescript/build/FlecsBuild', '#../gstgamescript/build/DaScriptBuild'] 
+)
+env.Append( LINKFLAGS=["-rpath", "@executable_path/../../gstgamescript/lib/"] )
 
 if env["build_library"]:
     library = env.StaticLibrary(target=env.File("bin/%s" % library_name), source=sources)
