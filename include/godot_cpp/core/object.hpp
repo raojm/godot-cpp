@@ -118,11 +118,9 @@ public:
 
 template <typename T>
 T *Object::cast_to(Object *p_object) {
-#if GODOT_VERSION_MINOR >= 7
-	return p_object && p_object->is_class(T::get_class_static()) ? static_cast<T *>(p_object) : nullptr;
-#else
+	// VL-GDEXT 迁移补丁：恒用 dynamic_cast——GDSOFTCLASS 软类（未注册 ClassDB）无引擎侧
+	// 类元数据，is_class 链对它们恒 false；RTTI 对引擎对象与扩展对象均正确。
 	return p_object ? dynamic_cast<T *>(p_object) : nullptr;
-#endif
 }
 
 template <typename T>
